@@ -6,7 +6,7 @@ import (
 )
 
 func printTop(cols int) {
-	line := makeString(cols, "-")
+	line := makeString(cols-2, "-")
 	fmt.Printf("+%s+\n", line)
 }
 

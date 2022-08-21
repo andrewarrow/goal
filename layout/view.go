@@ -38,6 +38,7 @@ type RenderedView struct {
 
 var root Layout
 var idMap = map[string]*View{}
+var charStringMaps = map[int]map[int]string{}
 
 func LoadFromFile(filename string) {
 	asString := files.ReadFile(filename)
@@ -53,15 +54,28 @@ func Print(cols, rows int) {
 
 	fmt.Println(idMap)
 
+	for i := 0; i < rows; i++ {
+		charStringMaps[i] = map[int]string{}
+		charStringMaps[i][0] = "|"
+		charStringMaps[i][cols-1] = "|"
+		for j := 1; j < cols-1; j++ {
+			charStringMaps[i][j] = "*"
+		}
+	}
+
 	processSubviewsToRender(nil, &root.Root, root.Root.Subviews)
 
 	printTop(cols)
 	for i := 0; i < rows; i++ {
 		for j := 0; j < cols; j++ {
-			fmt.Printf("*")
+			fmt.Printf(stringCharAt(i, j))
 		}
 		fmt.Printf("\n")
 	}
+}
+
+func stringCharAt(row, col int) string {
+	return charStringMaps[row][col]
 }
 
 func processSubviewsForIdMap(superview, view *View, subviews []View) {
