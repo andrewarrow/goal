@@ -22,13 +22,36 @@ func Print() {
 /*
 {
   "root": {
-    "view1": {
-      "label1": "foo1"
-    },
-    "view2": {
-      "label1": "foo2",
-      "label2": "foo3"
-    }
+    "subviews": [
+		  {
+			  "name": "view1",
+				"class": "UIView",
+				"subviews": [
+					{
+						"name": "view2",
+						"class": "UIView",
+						"subviews": [
+									{
+										"name": "label1",
+										"class": "UILabel",
+										"text": "Hello"
+									}
+						]
+					},
+					{
+						"name": "view3",
+						"class": "UIView",
+						"subviews": [
+									{
+										"name": "label2",
+										"class": "UILabel",
+										"text": "There"
+									}
+						]
+					}
+				]
+      }
+		]
   }
 }
 
