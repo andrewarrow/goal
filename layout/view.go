@@ -36,6 +36,7 @@ func Print(cols, rows int) {
 	processSubviews(root.Root, root.Root.Subviews)
 
 	printTop(cols)
+	printRow(cols)
 }
 
 func processSubviews(view View, subviews []View) {

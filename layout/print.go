@@ -6,14 +6,19 @@ import (
 )
 
 func printTop(cols int) {
-	line := makeDashes(cols)
+	line := makeString(cols, "-")
 	fmt.Printf("+%s+\n", line)
 }
 
-func makeDashes(cols int) string {
+func printRow(cols int) {
+	line := makeString(cols, " ")
+	fmt.Printf("|%s|\n", line)
+}
+
+func makeString(cols int, s string) string {
 	buff := []string{}
 	for i := 0; i < cols; i++ {
-		buff = append(buff, "-")
+		buff = append(buff, s)
 	}
 	return strings.Join(buff, "")
 }
