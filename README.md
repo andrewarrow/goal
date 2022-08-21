@@ -12,34 +12,49 @@ Goal (pun intended) is to try and learn auto layout in a deep way.
 <img src="screenshot1.png" width="200" height="433">
 
 # Example Json
-
 ```
 {
   "root": {
     "subviews": [
       {
-        "name": "view1",
+        "id": "view1",
         "class": "UIView",
+        "leading": {"equal": "root.leading", "constant": 33},
+        "top": {"equal": "root.top", "constant": 33},
+        "trailing": {"equal": "root.trailing", "constant": -33},
+        "bottom": {"equal": "root.bottom", "constant": -33},
         "subviews": [
           {
-            "name": "view2",
+            "id": "view2",
             "class": "UIView",
+            "leading": {"equal": "view1.leading", "constant": 33},
+            "top": {"equal": "view1.top", "constant": 33},
+            "trailing": {"equal": "label1.trailing", "constant": 33},
+            "bottom": {"equal": "view1.bottom", "constant": -33},
             "subviews": [
               {
-                "name": "label1",
+                "id": "label1",
                 "class": "UILabel",
-                "text": "Hello"
+                "text": "Hello",
+                "leading": {"equal": "view2.leading", "constant": 33},
+                "top": {"equal": "view2.top", "constant": 33}
               }
             ]
           },
           {
-            "name": "view3",
+            "id": "view3",
             "class": "UIView",
+            "leading": {"equal": "label1.leading", "constant": 99},
+            "top": {"equal": "view1.top", "constant": 33},
+            "trailing": {"equal": "label2.trailing", "constant": 33},
+            "bottom": {"equal": "view1.bottom", "constant": -33},
             "subviews": [
               {
-                "name": "label2",
+                "id": "label2",
                 "class": "UILabel",
-                "text": "There"
+                "text": "There",
+                "leading": {"equal": "view3.leading", "constant": 33},
+                "top": {"equal": "view3.top", "constant": 33}
               }
             ]
           }
