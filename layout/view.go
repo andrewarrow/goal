@@ -2,7 +2,6 @@ package layout
 
 import (
 	"encoding/json"
-	"fmt"
 	"goal/files"
 )
 
@@ -36,10 +35,11 @@ func LoadFromFile(filename string) {
 func Print(cols, rows int) {
 	processSubviews(root.Root, root.Root.Subviews)
 
+	printTop(cols)
 }
 
 func processSubviews(view View, subviews []View) {
-	fmt.Println(view, len(subviews))
+	//fmt.Println(view, len(subviews))
 	for _, subview := range subviews {
 		processSubviews(subview, subview.Subviews)
 	}
