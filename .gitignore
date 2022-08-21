@@ -1,3 +1,4 @@
 goal
+.DS_Store
 go.sum
 data
