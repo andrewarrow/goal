@@ -9,7 +9,7 @@ Goal (pun intended) is to try and learn auto layout in a deep way.
 
 # Example Screenshot
 
-![<img src="screenshot1.png" width="150"/>](screenshot1.png)
+![screenshot1](screenshot1.png){height=200px width=433px}
 
 # Example Json
 
