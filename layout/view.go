@@ -28,13 +28,14 @@ type Constraint struct {
 
 var root Layout
 
-func LoadFromFile() {
-	asString := files.ReadFile("layout.json")
+func LoadFromFile(filename string) {
+	asString := files.ReadFile(filename)
 	json.Unmarshal([]byte(asString), &root)
 }
 
-func Print() {
+func Print(cols, rows int) {
 	processSubviews(root.Root, root.Root.Subviews)
+
 }
 
 func processSubviews(view View, subviews []View) {
