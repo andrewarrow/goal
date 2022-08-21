@@ -9,7 +9,8 @@ Goal (pun intended) is to try and learn auto layout in a deep way.
 
 # Example Screenshot
 
-![screenshot1](screenshot1.png{height=200px width=433px})
+![screenshot1][screenshot1]{height=200px width=433px}
+[screenshot1]: screenshot1.png "screenshot1"
 
 # Example Json
 
