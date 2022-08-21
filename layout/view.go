@@ -59,7 +59,7 @@ func Print(cols, rows int) {
 		charStringMaps[i][0] = "|"
 		charStringMaps[i][cols-1] = "|"
 		for j := 1; j < cols-1; j++ {
-			charStringMaps[i][j] = "*"
+			charStringMaps[i][j] = " "
 		}
 	}
 
@@ -111,9 +111,18 @@ func processSubviewsToRender(superview, view *View, subviews []View) {
 		renderedView := RenderedView{}
 		renderedView.Top = 2
 		renderedView.Leading = 3
-		renderedView.Width = superview.RenderedView.Width - 6
+		renderedView.Width = superview.RenderedView.Width - 4
 		renderedView.Height = superview.RenderedView.Height - 4
 		view.RenderedView = &renderedView
+
+		for i := renderedView.Top; i < renderedView.Height+1; i++ {
+			charStringMaps[i][renderedView.Leading] = "|"
+			charStringMaps[i][renderedView.Width] = "|"
+		}
+		for j := 4; j < renderedView.Width; j++ {
+			charStringMaps[renderedView.Top-1][j] = "-"
+			charStringMaps[renderedView.Height+1][j] = "-"
+		}
 	}
 	if len(subviews) == 0 {
 		fmt.Println("leaf", view.Text)
