@@ -2,6 +2,7 @@ package layout
 
 import (
 	"encoding/json"
+	"fmt"
 	"goal/files"
 )
 
@@ -16,7 +17,19 @@ func LoadFromFile() {
 }
 
 func Print() {
-	root := rootMap["root"]
+	root := rootMap["root"].(map[string]any)
+	processSubviews("root", root["subviews"].([]any))
+}
+
+func processSubviews(id string, subviews []any) {
+	fmt.Println(id, len(subviews))
+	for _, subview := range subviews {
+		m := subview.(map[string]any)
+		if m["subviews"] == nil {
+			continue
+		}
+		processSubviews(m["id"].(string), m["subviews"].([]any))
+	}
 }
 
 /*
