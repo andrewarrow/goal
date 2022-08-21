@@ -18,6 +18,7 @@ func main() {
 
 	if command == "run" {
 		layout.LoadFromFile()
+		layout.Print()
 	} else if command == "add" {
 	}
 }
