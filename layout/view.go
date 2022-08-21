@@ -2,6 +2,7 @@ package layout
 
 import (
 	"encoding/json"
+	"fmt"
 	"goal/files"
 )
 
@@ -33,16 +34,26 @@ func LoadFromFile(filename string) {
 }
 
 func Print(cols, rows int) {
-	processSubviews(root.Root, root.Root.Subviews)
+	processSubviews(nil, &root.Root, root.Root.Subviews)
 
-	printTop(cols)
-	printRow(cols)
+	//printTop(cols)
+	//printRow(cols)
 }
 
-func processSubviews(view View, subviews []View) {
-	//fmt.Println(view, len(subviews))
+func processSubviews(superview, view *View, subviews []View) {
+	if superview != nil {
+		fmt.Println(superview.Id, view.Id, len(subviews))
+	}
+	if len(subviews) == 0 {
+		// for now assume leaf is UILabel with text
+		// text has a default width height based on size of font
+		// in our case of CLI it's a fixed width font, so len of string is the width
+		// and height is always 1 row
+		fmt.Println("leaf", view.Text)
+	}
 	for _, subview := range subviews {
-		processSubviews(subview, subview.Subviews)
+		copyOfSubview := subview
+		processSubviews(view, &copyOfSubview, subview.Subviews)
 	}
 }
 

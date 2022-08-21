@@ -1,5 +1,6 @@
 {
   "root": {
+    "id": "root",
     "subviews": [
       {
         "id": "view1",
