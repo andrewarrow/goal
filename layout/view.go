@@ -7,28 +7,30 @@ import (
 )
 
 type Layout struct {
+	Root View `json:"root"`
 }
 
-var rootMap map[string]any
+type View struct {
+	Id       string `json:"id"`
+	Class    string `json:"class"`
+	Subviews []View `json:"subviews"`
+}
+
+var root Layout
 
 func LoadFromFile() {
 	asString := files.ReadFile("layout.json")
-	json.Unmarshal([]byte(asString), &rootMap)
+	json.Unmarshal([]byte(asString), &root)
 }
 
 func Print() {
-	root := rootMap["root"].(map[string]any)
-	processSubviews("root", root["subviews"].([]any))
+	processSubviews("root", root.Root.Subviews)
 }
 
-func processSubviews(id string, subviews []any) {
+func processSubviews(id string, subviews []View) {
 	fmt.Println(id, len(subviews))
 	for _, subview := range subviews {
-		m := subview.(map[string]any)
-		if m["subviews"] == nil {
-			continue
-		}
-		processSubviews(m["id"].(string), m["subviews"].([]any))
+		processSubviews(subview.Id, subview.Subviews)
 	}
 }
 
