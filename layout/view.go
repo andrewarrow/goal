@@ -119,10 +119,14 @@ func processSubviewsToRender(superview, view *View, subviews []View) {
 			charStringMaps[i][renderedView.Leading] = "|"
 			charStringMaps[i][renderedView.Width] = "|"
 		}
+		charStringMaps[renderedView.Top-1][renderedView.Leading] = "+"
+		charStringMaps[renderedView.Top-1][renderedView.Width] = "+"
 		for j := 4; j < renderedView.Width; j++ {
 			charStringMaps[renderedView.Top-1][j] = "-"
 			charStringMaps[renderedView.Height+1][j] = "-"
 		}
+		charStringMaps[renderedView.Height+1][renderedView.Leading] = "+"
+		charStringMaps[renderedView.Height+1][renderedView.Width] = "+"
 	}
 	if len(subviews) == 0 {
 		fmt.Println("leaf", view.Text)
