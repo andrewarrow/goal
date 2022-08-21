@@ -149,3 +149,12 @@ Goal (pun intended) is to try and learn auto layout in a deep way.
 |                                                   |
 +---------------------------------------------------+
 ```
+
+# Running
+
+```
+os/goal $ ./goal
+
+  goal run                       # use example/layout.json with cols=60 and rows=30
+  goal run ~/layout.json 80 40   # use passed in file, cols, and rows
+```
