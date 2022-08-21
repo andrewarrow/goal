@@ -19,42 +19,42 @@ Goal (pun intended) is to try and learn auto layout in a deep way.
       {
         "id": "view1",
         "class": "UIView",
-        "leading": {"equal": "root.leading", "constant": 33},
-        "top": {"equal": "root.top", "constant": 33},
-        "trailing": {"equal": "root.trailing", "constant": -33},
-        "bottom": {"equal": "root.bottom", "constant": -33},
+        "leading": {"equal": "root.leading", constant: 33},
+        "top": {"equal": "root.top", constant: 33},
+        "trailing": {"equal": "root.trailing", constant: -33},
+        "bottom": {"equal": "root.bottom", constant: -33},
         "subviews": [
           {
             "id": "view2",
             "class": "UIView",
-            "leading": {"equal": "view1.leading", "constant": 33},
-            "top": {"equal": "view1.top", "constant": 33},
-            "trailing": {"equal": "label1.trailing", "constant": 33},
-            "bottom": {"equal": "view1.bottom", "constant": -33},
+            "leading": {"equal": "view1.leading", constant: 33},
+            "top": {"equal": "view1.top", constant: 33},
+            "trailing": {"equal": "label1.trailing", constant: 33},
+            "bottom: {"equal": "view1.bottom", constant: -33},
             "subviews": [
               {
                 "id": "label1",
                 "class": "UILabel",
-                "text": "Hello",
-                "leading": {"equal": "view2.leading", "constant": 33},
-                "top": {"equal": "view2.top", "constant": 33}
+                "text": "Hello"
+                "leading": {"equal": "view2.leading", constant: 33},
+                "top": {"equal": "view2.top", constant: 33},
               }
             ]
           },
           {
             "id": "view3",
             "class": "UIView",
-            "leading": {"equal": "label1.leading", "constant": 99},
-            "top": {"equal": "view1.top", "constant": 33},
-            "trailing": {"equal": "label2.trailing", "constant": 33},
-            "bottom": {"equal": "view1.bottom", "constant": -33},
+            "leading": {"equal": "label1.leading", constant: 99},
+            "top": {"equal": "view1.top", constant: 33},
+            "trailing": {"equal": "label2.trailing", constant: 33},
+            "bottom: {"equal": "view1.bottom", constant: -33},
             "subviews": [
               {
                 "id": "label2",
                 "class": "UILabel",
-                "text": "There",
-                "leading": {"equal": "view3.leading", "constant": 33},
-                "top": {"equal": "view3.top", "constant": 33}
+                "text": "There"
+                "leading": {"equal": "view3.leading", constant: 33},
+                "top": {"equal": "view3.top", constant: 33},
               }
             ]
           }
