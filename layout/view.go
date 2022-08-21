@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"goal/files"
+	"strings"
 )
 
 type Layout struct {
@@ -11,14 +12,15 @@ type Layout struct {
 }
 
 type View struct {
-	Id       string     `json:"id"`
-	Class    string     `json:"class"`
-	Subviews []View     `json:"subviews"`
-	Leading  Constraint `json:"leading"`
-	Top      Constraint `json:"top"`
-	Trailing Constraint `json:"trailing"`
-	Bottom   Constraint `json:"bottom"`
-	Text     string     `json:"text"`
+	Id           string     `json:"id"`
+	Class        string     `json:"class"`
+	Subviews     []View     `json:"subviews"`
+	Leading      Constraint `json:"leading"`
+	Top          Constraint `json:"top"`
+	Trailing     Constraint `json:"trailing"`
+	Bottom       Constraint `json:"bottom"`
+	Text         string     `json:"text"`
+	RenderedView *RenderedView
 }
 
 type Constraint struct {
@@ -26,7 +28,16 @@ type Constraint struct {
 	Constant int    `json:"constant"`
 }
 
+type RenderedView struct {
+	Width    int
+	Height   int
+	Leading  int
+	Top      int
+	Subviews []RenderedView
+}
+
 var root Layout
+var idMap = map[string]*View{}
 
 func LoadFromFile(filename string) {
 	asString := files.ReadFile(filename)
@@ -34,16 +45,30 @@ func LoadFromFile(filename string) {
 }
 
 func Print(cols, rows int) {
-	processSubviews(nil, &root.Root, root.Root.Subviews)
+	rootRenderedView := RenderedView{}
+	rootRenderedView.Width = cols
+	rootRenderedView.Height = rows
+	root.Root.RenderedView = &rootRenderedView
+	processSubviewsForIdMap(nil, &root.Root, root.Root.Subviews)
 
-	//printTop(cols)
-	//printRow(cols)
+	fmt.Println(idMap)
+
+	processSubviewsToRender(nil, &root.Root, root.Root.Subviews)
+
+	printTop(cols)
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			fmt.Printf("*")
+		}
+		fmt.Printf("\n")
+	}
 }
 
-func processSubviews(superview, view *View, subviews []View) {
+func processSubviewsForIdMap(superview, view *View, subviews []View) {
 	if superview != nil {
 		fmt.Println(superview.Id, view.Id, len(subviews))
 	}
+	idMap[view.Id] = view
 	if len(subviews) == 0 {
 		// for now assume leaf is UILabel with text
 		// text has a default width height based on size of font
@@ -53,7 +78,32 @@ func processSubviews(superview, view *View, subviews []View) {
 	}
 	for _, subview := range subviews {
 		copyOfSubview := subview
-		processSubviews(view, &copyOfSubview, subview.Subviews)
+		processSubviewsForIdMap(view, &copyOfSubview, subview.Subviews)
+	}
+}
+
+func parseEqual(s string) (string, string) {
+	tokens := strings.Split(s, ".")
+	return tokens[0], tokens[1]
+}
+
+func processSubviewsToRender(superview, view *View, subviews []View) {
+	if superview != nil {
+		id, position := parseEqual(view.Top.Equal)
+		fmt.Println(id, position, superview.Id, view.Id, len(subviews))
+		renderedView := RenderedView{}
+		renderedView.Top = 2
+		renderedView.Leading = 3
+		renderedView.Width = superview.RenderedView.Width - 6
+		renderedView.Height = superview.RenderedView.Height - 4
+		view.RenderedView = &renderedView
+	}
+	if len(subviews) == 0 {
+		fmt.Println("leaf", view.Text)
+	}
+	for _, subview := range subviews {
+		copyOfSubview := subview
+		processSubviewsToRender(view, &copyOfSubview, subview.Subviews)
 	}
 }
 
