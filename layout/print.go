@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func printTop(cols int) {
+func printTopSlashBottom(cols int) {
 	line := makeString(cols-2, "-")
 	fmt.Printf("+%s+\n", line)
 }

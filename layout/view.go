@@ -54,7 +54,7 @@ func Print(cols, rows int) {
 
 	fmt.Println(idMap)
 
-	for i := 0; i < rows; i++ {
+	for i := 0; i < rows-1; i++ {
 		charStringMaps[i] = map[int]string{}
 		charStringMaps[i][0] = "|"
 		charStringMaps[i][cols-1] = "|"
@@ -65,13 +65,16 @@ func Print(cols, rows int) {
 
 	processSubviewsToRender(nil, &root.Root, root.Root.Subviews)
 
-	printTop(cols)
+	printTopSlashBottom(cols)
 	for i := 0; i < rows; i++ {
 		for j := 0; j < cols; j++ {
 			fmt.Printf(stringCharAt(i, j))
 		}
-		fmt.Printf("\n")
+		if i < rows-1 {
+			fmt.Printf("\n")
+		}
 	}
+	printTopSlashBottom(cols)
 }
 
 func stringCharAt(row, col int) string {
