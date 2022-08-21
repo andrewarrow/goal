@@ -11,9 +11,19 @@ type Layout struct {
 }
 
 type View struct {
-	Id       string `json:"id"`
-	Class    string `json:"class"`
-	Subviews []View `json:"subviews"`
+	Id       string     `json:"id"`
+	Class    string     `json:"class"`
+	Subviews []View     `json:"subviews"`
+	Leading  Constraint `json:"leading"`
+	Top      Constraint `json:"top"`
+	Trailing Constraint `json:"trailing"`
+	Bottom   Constraint `json:"bottom"`
+	Text     string     `json:"text"`
+}
+
+type Constraint struct {
+	Equal    string `json:"equal"`
+	Constant int    `json:"constant"`
 }
 
 var root Layout
@@ -24,13 +34,13 @@ func LoadFromFile() {
 }
 
 func Print() {
-	processSubviews("root", root.Root.Subviews)
+	processSubviews(root.Root, root.Root.Subviews)
 }
 
-func processSubviews(id string, subviews []View) {
-	fmt.Println(id, len(subviews))
+func processSubviews(view View, subviews []View) {
+	fmt.Println(view, len(subviews))
 	for _, subview := range subviews {
-		processSubviews(subview.Id, subview.Subviews)
+		processSubviews(subview, subview.Subviews)
 	}
 }
 
