@@ -9,7 +9,7 @@ Goal (pun intended) is to try and learn auto layout in a deep way.
 
 # Example Screenshot
 
-![Screenshot](screenshot1.png)
+![Screenshot](screenshot1.png  =150x)
 
 # Example Json
 
