@@ -17,3 +17,9 @@ func makeSides(top, leading, width, height int) {
 		charStringMaps[i][width] = "|"
 	}
 }
+
+func makeText(top, leading int, text string) {
+	for i := 0; i < len(text); i++ {
+		charStringMaps[top][leading+i] = string(text[i])
+	}
+}

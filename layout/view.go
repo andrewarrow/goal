@@ -130,8 +130,12 @@ func processSubviewsToPrint(superview, view *View, subviews []*View) {
 		id, position := parseEqual(view.Top.Equal)
 		fmt.Println("1", id, position, superview.Id, view.Id, len(subviews))
 		renderedView := view.RenderedView
-		makeSides(renderedView.Top, renderedView.Leading, renderedView.Width, renderedView.Height+1)
-		makeTopAndBottom(renderedView.Top, renderedView.Leading, renderedView.Width, renderedView.Height+1)
+		if view.Class == "UILabel" {
+			makeText(renderedView.Top, renderedView.Leading, view.Text)
+		} else {
+			makeSides(renderedView.Top, renderedView.Leading, renderedView.Width, renderedView.Height+1)
+			makeTopAndBottom(renderedView.Top, renderedView.Leading, renderedView.Width, renderedView.Height+1)
+		}
 	}
 	if len(subviews) == 0 {
 		fmt.Println("leaf3", view.Text)
