@@ -18,7 +18,7 @@ func main() {
 	command := os.Args[1]
 
 	if command == "run" {
-		filename := "example/layout.json"
+		filename := "example/layout1.json"
 		cols := 60
 		rows := 30
 		if len(os.Args) > 4 {

@@ -54,18 +54,18 @@ func Print(cols, rows int) {
 
 	fmt.Println(idMap)
 
-	for i := 0; i < rows-1; i++ {
+	for i := 0; i < rows; i++ {
 		charStringMaps[i] = map[int]string{}
-		charStringMaps[i][0] = "|"
-		charStringMaps[i][cols-1] = "|"
-		for j := 1; j < cols-1; j++ {
+		for j := 0; j < cols; j++ {
 			charStringMaps[i][j] = " "
 		}
 	}
 
+	makeTopAndBottom(0, 0, rootRenderedView.Width-1, rootRenderedView.Height-1)
+	makeSides(1, 0, rootRenderedView.Width-1, rootRenderedView.Height-1)
+
 	processSubviewsToRender(nil, &root.Root, root.Root.Subviews)
 
-	printTopSlashBottom(cols)
 	for i := 0; i < rows; i++ {
 		for j := 0; j < cols; j++ {
 			fmt.Printf(stringCharAt(i, j))
@@ -74,7 +74,7 @@ func Print(cols, rows int) {
 			fmt.Printf("\n")
 		}
 	}
-	printTopSlashBottom(cols)
+	fmt.Println("")
 }
 
 func stringCharAt(row, col int) string {
@@ -115,18 +115,8 @@ func processSubviewsToRender(superview, view *View, subviews []View) {
 		renderedView.Height = superview.RenderedView.Height - 4
 		view.RenderedView = &renderedView
 
-		for i := renderedView.Top; i < renderedView.Height+1; i++ {
-			charStringMaps[i][renderedView.Leading] = "|"
-			charStringMaps[i][renderedView.Width] = "|"
-		}
-		charStringMaps[renderedView.Top-1][renderedView.Leading] = "+"
-		charStringMaps[renderedView.Top-1][renderedView.Width] = "+"
-		for j := 4; j < renderedView.Width; j++ {
-			charStringMaps[renderedView.Top-1][j] = "-"
-			charStringMaps[renderedView.Height+1][j] = "-"
-		}
-		charStringMaps[renderedView.Height+1][renderedView.Leading] = "+"
-		charStringMaps[renderedView.Height+1][renderedView.Width] = "+"
+		makeSides(renderedView.Top, renderedView.Leading, renderedView.Width, renderedView.Height+1)
+		makeTopAndBottom(renderedView.Top, renderedView.Leading, renderedView.Width, renderedView.Height+1)
 	}
 	if len(subviews) == 0 {
 		fmt.Println("leaf", view.Text)

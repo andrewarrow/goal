@@ -1,24 +1,19 @@
 package layout
 
-import (
-	"fmt"
-	"strings"
-)
-
-func printTopSlashBottom(cols int) {
-	line := makeString(cols-2, "-")
-	fmt.Printf("+%s+\n", line)
-}
-
-func printRow(cols int) {
-	line := makeString(cols, " ")
-	fmt.Printf("|%s|\n", line)
-}
-
-func makeString(cols int, s string) string {
-	buff := []string{}
-	for i := 0; i < cols; i++ {
-		buff = append(buff, s)
+func makeTopAndBottom(row, leading, width, height int) {
+	charStringMaps[row][leading] = "+"
+	charStringMaps[row][width] = "+"
+	for j := leading + 1; j < width; j++ {
+		charStringMaps[row][j] = "-"
+		charStringMaps[height][j] = "-"
 	}
-	return strings.Join(buff, "")
+	charStringMaps[height][leading] = "+"
+	charStringMaps[height][width] = "+"
+}
+
+func makeSides(top, leading, width, height int) {
+	for i := top; i < height; i++ {
+		charStringMaps[i][leading] = "|"
+		charStringMaps[i][width] = "|"
+	}
 }
