@@ -64,7 +64,7 @@ func Print(cols, rows int) {
 	makeTopAndBottom(0, 0, rootRenderedView.Width-1, rootRenderedView.Height-1)
 	makeSides(1, 0, rootRenderedView.Width-1, rootRenderedView.Height-1)
 
-	processSubviewsToRender(nil, &root.Root, root.Root.Subviews)
+	processSubviewsToRender(&root.Root, root.Root.Subviews)
 	processSubviewsToPrint(nil, &root.Root, root.Root.Subviews)
 
 	for i := 0; i < rows; i++ {
@@ -105,23 +105,58 @@ func parseEqual(s string) (string, string) {
 	return tokens[0], tokens[1]
 }
 
-func processSubviewsToRender(superview, view *View, subviews []*View) {
-	if superview != nil {
-		id, position := parseEqual(view.Top.Equal)
-		fmt.Println(id, position, superview.Id, view.Id, len(subviews))
+func processRender(top, leading, width, height *View) *RenderedView {
+	renderedView := RenderedView{}
+	renderedView.Top = referencedView.RenderedView.Top + 2
+	renderedView.Leading = referencedView.RenderedView.Leading + 3
+	if view.Class == "UILabel" {
+		renderedView.Width = len(view.Text)
+		renderedView.Height = 1
+	} else {
+		renderedView.Width = referencedView.RenderedView.Width - 4
+		renderedView.Height = referencedView.RenderedView.Height - 4
+	}
+
+	return &renderedView
+}
+
+func processSubviewsToRender(view *View, subviews []*View) {
+	if view.Id != "root" {
+		topId, topPosition := parseEqual(view.Top.Equal)
+		leadingId, leadingPosition := parseEqual(view.Leading.Equal)
+		trailingId, trailingPosition := parseEqual(view.Trailing.Equal)
+		bottomId, bottomPosition := parseEqual(view.Bottom.Equal)
+		fmt.Println(topPosition, leadingPosition, trailingPosition, bottomPosition)
+
+		referencedViewTop := idMap[topId]
+		referencedViewLeading := idMap[leadingId]
+		//referencedViewTrailing := idMap[trailingId]
+		//referencedViewBottom := idMap[bottomId]
+
 		renderedView := RenderedView{}
-		renderedView.Top = 2
-		renderedView.Leading = 3
-		renderedView.Width = superview.RenderedView.Width - 4
-		renderedView.Height = superview.RenderedView.Height - 4
+		if referencedViewTop.RenderedView != nil {
+			renderedView.Top = referencedViewTop.RenderedView.Top + 2
+		}
+		if referencedViewLeading.RenderedView != nil {
+			renderedView.Leading = referencedViewLeading.RenderedView.Leading + 2
+		}
+		if view.Class == "UILabel" {
+			renderedView.Width = len(view.Text)
+			renderedView.Height = 1
+		} else {
+			renderedView.Width = referencedViewLeading.RenderedView.Width - 4
+			renderedView.Height = referencedViewTop.RenderedView.Height - 4
+		}
+
 		view.RenderedView = &renderedView
+
 	}
 	if len(subviews) == 0 {
 		fmt.Println("leaf2", view.Text)
 	}
 	for _, subview := range subviews {
 		copyOfSubview := subview
-		processSubviewsToRender(view, copyOfSubview, subview.Subviews)
+		processSubviewsToRender(copyOfSubview, subview.Subviews)
 	}
 }
 
