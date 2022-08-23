@@ -28,14 +28,6 @@ type Constraint struct {
 	Constant int    `json:"constant"`
 }
 
-type RenderedView struct {
-	Width    int
-	Height   int
-	Leading  int
-	Top      int
-	Subviews []RenderedView
-}
-
 var root Layout
 var idMap = map[string]*View{}
 var charStringMaps = map[int]map[int]string{}
@@ -49,6 +41,7 @@ func Print(cols, rows int) {
 	rootRenderedView := RenderedView{}
 	rootRenderedView.Width = cols
 	rootRenderedView.Height = rows
+	rootRenderedView.SetComplete()
 	root.Root.RenderedView = &rootRenderedView
 	processSubviewsForIdMap(nil, &root.Root, root.Root.Subviews)
 
@@ -64,7 +57,12 @@ func Print(cols, rows int) {
 	makeTopAndBottom(0, 0, rootRenderedView.Width-1, rootRenderedView.Height-1)
 	makeSides(1, 0, rootRenderedView.Width-1, rootRenderedView.Height-1)
 
-	processSubviewsToRender(nil, &root.Root, root.Root.Subviews)
+	for {
+		processSubviewsToRender(nil, &root.Root, root.Root.Subviews)
+		if allViewsReady() {
+			break
+		}
+	}
 	processSubviewsToPrint(nil, &root.Root, root.Root.Subviews)
 
 	for i := 0; i < rows; i++ {
@@ -78,6 +76,15 @@ func Print(cols, rows int) {
 	fmt.Println("")
 }
 
+func allViewsReady() bool {
+	for _, view := range idMap {
+		if view.RenderedView.isComplete() == false {
+			return false
+		}
+	}
+	return true
+}
+
 func stringCharAt(row, col int) string {
 	return charStringMaps[row][col]
 }
@@ -86,6 +93,8 @@ func processSubviewsForIdMap(superview, view *View, subviews []*View) {
 	if superview != nil {
 		fmt.Println(superview.Id, view.Id, len(subviews))
 	}
+	renderedView := RenderedView{}
+	view.RenderedView = &renderedView
 	idMap[view.Id] = view
 	if len(subviews) == 0 {
 		// for now assume leaf is UILabel with text
