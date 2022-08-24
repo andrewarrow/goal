@@ -102,6 +102,9 @@ func processSubviewsForIdMap(view *View, subviews []*View) {
 }
 
 func parseEqual(s string) (string, string) {
+	if s == "" {
+		return "", ""
+	}
 	tokens := strings.Split(s, ".")
 	return tokens[0], tokens[1]
 }
@@ -110,21 +113,14 @@ func processSubviewsToRender(view *View, subviews []*View) {
 	if view.Id != "root" {
 		topId, _ := parseEqual(view.Top.Equal)
 		leadingId, _ := parseEqual(view.Leading.Equal)
-		//trailingId, _ := parseEqual(view.Trailing.Equal)
-		//bottomId, _ := parseEqual(view.Bottom.Equal)
+		trailingId, _ := parseEqual(view.Trailing.Equal)
+		bottomId, _ := parseEqual(view.Bottom.Equal)
 		fmt.Println(view.Id, len(subviews))
 
 		referencedViewTop := idMap[topId]
 		referencedViewLeading := idMap[leadingId]
-		//referencedViewTrailing := idMap[trailingId]
-		//referencedViewBottom := idMap[bottomId]
-
-		if view.Class == "UILabel" {
-			view.renderedView.Width = len(view.Text)
-			view.renderedView.Height = 1
-			view.renderedView.WidthSet = true
-			view.renderedView.HeightSet = true
-		}
+		referencedViewTrailing := idMap[trailingId]
+		referencedViewBottom := idMap[bottomId]
 
 		if referencedViewTop.renderedView.TopSet {
 			view.renderedView.Top = referencedViewTop.renderedView.Top + 2
@@ -136,16 +132,24 @@ func processSubviewsToRender(view *View, subviews []*View) {
 			view.renderedView.LeadingSet = true
 		}
 
-		if view.Class != "UILabel" {
-			//if referencedViewWidth.renderedView.WidthSet {
-			view.renderedView.Width = 20
+		if view.Class == "UILabel" {
+			view.renderedView.Width = len(view.Text)
+			view.renderedView.Height = 1
 			view.renderedView.WidthSet = true
-			//}
-
-			//if referencedViewHeight.renderedView.HeightSet {
-			view.renderedView.Height = 20
 			view.renderedView.HeightSet = true
-			//}
+		} else {
+			// root.leading to root.trailing == root.width
+			// view1.leading to label1.trailing == label1.width
+			// label1.leading + 99 to label2.trailing == label2.width
+			if referencedViewTrailing.renderedView.WidthSet {
+				view.renderedView.Width = 20 //referencedViewTrailing.renderedView.Width
+				view.renderedView.WidthSet = true
+			}
+
+			if referencedViewBottom.renderedView.HeightSet {
+				view.renderedView.Height = 20 //referencedViewBottom.renderedView.Height
+				view.renderedView.HeightSet = true
+			}
 		}
 	}
 	for _, subview := range subviews {
