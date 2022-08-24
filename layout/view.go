@@ -108,9 +108,16 @@ func parseEqual(s string) (string, string) {
 
 func processSubviewsToRender(view *View, subviews []*View) {
 	if view.Id != "root" {
-		id, position := parseEqual(view.Top.Equal)
-		fmt.Println(id, position, view.Id, len(subviews))
-		referencedView := idMap[id]
+		topId, _ := parseEqual(view.Top.Equal)
+		leadingId, _ := parseEqual(view.Leading.Equal)
+		//trailingId, _ := parseEqual(view.Trailing.Equal)
+		//bottomId, _ := parseEqual(view.Bottom.Equal)
+		fmt.Println(view.Id, len(subviews))
+
+		referencedViewTop := idMap[topId]
+		referencedViewLeading := idMap[leadingId]
+		//referencedViewTrailing := idMap[trailingId]
+		//referencedViewBottom := idMap[bottomId]
 
 		if view.Class == "UILabel" {
 			view.renderedView.Width = len(view.Text)
@@ -119,26 +126,26 @@ func processSubviewsToRender(view *View, subviews []*View) {
 			view.renderedView.HeightSet = true
 		}
 
-		if referencedView.renderedView.TopSet {
-			view.renderedView.Top = referencedView.renderedView.Top + 2
+		if referencedViewTop.renderedView.TopSet {
+			view.renderedView.Top = referencedViewTop.renderedView.Top + 2
 			view.renderedView.TopSet = true
 		}
 
-		if referencedView.renderedView.LeadingSet {
-			view.renderedView.Leading = referencedView.renderedView.Leading + 3
+		if referencedViewLeading.renderedView.LeadingSet {
+			view.renderedView.Leading = referencedViewLeading.renderedView.Leading + 3
 			view.renderedView.LeadingSet = true
 		}
 
 		if view.Class != "UILabel" {
-			if referencedView.renderedView.WidthSet {
-				view.renderedView.Width = referencedView.renderedView.Width - 4
-				view.renderedView.WidthSet = true
-			}
+			//if referencedViewWidth.renderedView.WidthSet {
+			view.renderedView.Width = 20
+			view.renderedView.WidthSet = true
+			//}
 
-			if referencedView.renderedView.HeightSet {
-				view.renderedView.Height = referencedView.renderedView.Height - 4
-				view.renderedView.HeightSet = true
-			}
+			//if referencedViewHeight.renderedView.HeightSet {
+			view.renderedView.Height = 20
+			view.renderedView.HeightSet = true
+			//}
 		}
 	}
 	for _, subview := range subviews {
