@@ -45,8 +45,6 @@ func Print(cols, rows int) {
 	root.Root.renderedView = &rootRenderedView
 	processSubviewsForIdMap(&root.Root, root.Root.Subviews)
 
-	fmt.Println(idMap)
-
 	for i := 0; i < rows; i++ {
 		charStringMaps[i] = map[int]string{}
 		for j := 0; j < cols; j++ {
@@ -115,7 +113,6 @@ func processSubviewsToRender(view *View, subviews []*View) {
 		leadingId, _ := parseEqual(view.Leading.Equal)
 		trailingId, _ := parseEqual(view.Trailing.Equal)
 		bottomId, _ := parseEqual(view.Bottom.Equal)
-		fmt.Println(view.Id, len(subviews))
 
 		referencedViewTop := idMap[topId]
 		referencedViewLeading := idMap[leadingId]
@@ -125,11 +122,13 @@ func processSubviewsToRender(view *View, subviews []*View) {
 		if referencedViewTop.renderedView.TopSet {
 			view.renderedView.Top = referencedViewTop.renderedView.Top + 2
 			view.renderedView.TopSet = true
+			//fmt.Println("|", view.Id, "topSet", view.renderedView.Top)
 		}
 
 		if referencedViewLeading.renderedView.LeadingSet {
-			view.renderedView.Leading = referencedViewLeading.renderedView.Leading + 3
+			view.renderedView.Leading = referencedViewLeading.renderedView.Leading + (view.Leading.Constant / 10)
 			view.renderedView.LeadingSet = true
+			//fmt.Println("|", view.Id, "leadingSet", view.renderedView.Leading)
 		}
 
 		if view.Class == "UILabel" {
@@ -142,12 +141,14 @@ func processSubviewsToRender(view *View, subviews []*View) {
 			// view1.leading to label1.trailing == label1.width
 			// label1.leading + 99 to label2.trailing == label2.width
 			if referencedViewTrailing.renderedView.WidthSet {
-				view.renderedView.Width = 20 //referencedViewTrailing.renderedView.Width
+				//fmt.Println("w", view.Id, referencedViewTrailing.Id, referencedViewTrailing.renderedView.Width)
+				view.renderedView.Width = 24 //referencedViewTrailing.renderedView.Width - 4
 				view.renderedView.WidthSet = true
 			}
 
 			if referencedViewBottom.renderedView.HeightSet {
-				view.renderedView.Height = 20 //referencedViewBottom.renderedView.Height
+				//fmt.Println("h", view.Id, referencedViewBottom.Id, referencedViewBottom.renderedView.Height)
+				view.renderedView.Height = 24 //referencedViewBottom.renderedView.Height - 4
 				view.renderedView.HeightSet = true
 			}
 		}
@@ -160,8 +161,6 @@ func processSubviewsToRender(view *View, subviews []*View) {
 
 func processSubviewsToPrint(view *View, subviews []*View) {
 	if view.Id != "root" {
-		id, position := parseEqual(view.Top.Equal)
-		fmt.Println("1", id, position, view.Id, len(subviews))
 		renderedView := view.renderedView
 		if view.Class == "UILabel" {
 			makeText(renderedView.Top, renderedView.Leading, view.Text)
