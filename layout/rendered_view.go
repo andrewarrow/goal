@@ -15,7 +15,7 @@ func (rv *RenderedView) isComplete() bool {
 	return rv.TopSet && rv.LeadingSet && rv.WidthSet && rv.HeightSet
 }
 
-func (rv *RenderedView) SetComplete() {
+func (rv *RenderedView) setComplete() {
 	rv.TopSet = true
 	rv.LeadingSet = true
 	rv.WidthSet = true

@@ -20,7 +20,7 @@ type View struct {
 	Trailing     Constraint `json:"trailing"`
 	Bottom       Constraint `json:"bottom"`
 	Text         string     `json:"text"`
-	RenderedView *RenderedView
+	renderedView *RenderedView
 }
 
 type Constraint struct {
@@ -41,9 +41,9 @@ func Print(cols, rows int) {
 	rootRenderedView := RenderedView{}
 	rootRenderedView.Width = cols
 	rootRenderedView.Height = rows
-	rootRenderedView.SetComplete()
-	root.Root.RenderedView = &rootRenderedView
-	processSubviewsForIdMap(nil, &root.Root, root.Root.Subviews)
+	rootRenderedView.setComplete()
+	root.Root.renderedView = &rootRenderedView
+	processSubviewsForIdMap(&root.Root, root.Root.Subviews)
 
 	fmt.Println(idMap)
 
@@ -58,12 +58,12 @@ func Print(cols, rows int) {
 	makeSides(1, 0, rootRenderedView.Width-1, rootRenderedView.Height-1)
 
 	for {
-		processSubviewsToRender(nil, &root.Root, root.Root.Subviews)
+		processSubviewsToRender(&root.Root, root.Root.Subviews)
 		if allViewsReady() {
 			break
 		}
 	}
-	processSubviewsToPrint(nil, &root.Root, root.Root.Subviews)
+	processSubviewsToPrint(&root.Root, root.Root.Subviews)
 
 	for i := 0; i < rows; i++ {
 		for j := 0; j < cols; j++ {
@@ -78,7 +78,7 @@ func Print(cols, rows int) {
 
 func allViewsReady() bool {
 	for _, view := range idMap {
-		if view.RenderedView.isComplete() == false {
+		if view.renderedView.isComplete() == false {
 			return false
 		}
 	}
@@ -89,23 +89,15 @@ func stringCharAt(row, col int) string {
 	return charStringMaps[row][col]
 }
 
-func processSubviewsForIdMap(superview, view *View, subviews []*View) {
-	if superview != nil {
-		fmt.Println(superview.Id, view.Id, len(subviews))
+func processSubviewsForIdMap(view *View, subviews []*View) {
+	if view.Id != "root" {
+		renderedView := RenderedView{}
+		view.renderedView = &renderedView
 	}
-	renderedView := RenderedView{}
-	view.RenderedView = &renderedView
 	idMap[view.Id] = view
-	if len(subviews) == 0 {
-		// for now assume leaf is UILabel with text
-		// text has a default width height based on size of font
-		// in our case of CLI it's a fixed width font, so len of string is the width
-		// and height is always 1 row
-		fmt.Println("leaf1", view.Text)
-	}
 	for _, subview := range subviews {
 		copyOfSubview := subview
-		processSubviewsForIdMap(view, copyOfSubview, subview.Subviews)
+		processSubviewsForIdMap(copyOfSubview, subview.Subviews)
 	}
 }
 
@@ -114,31 +106,52 @@ func parseEqual(s string) (string, string) {
 	return tokens[0], tokens[1]
 }
 
-func processSubviewsToRender(superview, view *View, subviews []*View) {
-	if superview != nil {
+func processSubviewsToRender(view *View, subviews []*View) {
+	if view.Id != "root" {
 		id, position := parseEqual(view.Top.Equal)
-		fmt.Println(id, position, superview.Id, view.Id, len(subviews))
-		renderedView := RenderedView{}
-		renderedView.Top = 2
-		renderedView.Leading = 3
-		renderedView.Width = superview.RenderedView.Width - 4
-		renderedView.Height = superview.RenderedView.Height - 4
-		view.RenderedView = &renderedView
-	}
-	if len(subviews) == 0 {
-		fmt.Println("leaf2", view.Text)
+		fmt.Println(id, position, view.Id, len(subviews))
+		referencedView := idMap[id]
+
+		if view.Class == "UILabel" {
+			view.renderedView.Width = len(view.Text)
+			view.renderedView.Height = 1
+			view.renderedView.WidthSet = true
+			view.renderedView.HeightSet = true
+		}
+
+		if referencedView.renderedView.TopSet {
+			view.renderedView.Top = referencedView.renderedView.Top + 2
+			view.renderedView.TopSet = true
+		}
+
+		if referencedView.renderedView.LeadingSet {
+			view.renderedView.Leading = referencedView.renderedView.Leading + 3
+			view.renderedView.LeadingSet = true
+		}
+
+		if view.Class != "UILabel" {
+			if referencedView.renderedView.WidthSet {
+				view.renderedView.Width = referencedView.renderedView.Width - 4
+				view.renderedView.WidthSet = true
+			}
+
+			if referencedView.renderedView.HeightSet {
+				view.renderedView.Height = referencedView.renderedView.Height - 4
+				view.renderedView.HeightSet = true
+			}
+		}
 	}
 	for _, subview := range subviews {
 		copyOfSubview := subview
-		processSubviewsToRender(view, copyOfSubview, subview.Subviews)
+		processSubviewsToRender(copyOfSubview, subview.Subviews)
 	}
 }
 
-func processSubviewsToPrint(superview, view *View, subviews []*View) {
-	if superview != nil {
+func processSubviewsToPrint(view *View, subviews []*View) {
+	if view.Id != "root" {
 		id, position := parseEqual(view.Top.Equal)
-		fmt.Println("1", id, position, superview.Id, view.Id, len(subviews))
-		renderedView := view.RenderedView
+		fmt.Println("1", id, position, view.Id, len(subviews))
+		renderedView := view.renderedView
 		if view.Class == "UILabel" {
 			makeText(renderedView.Top, renderedView.Leading, view.Text)
 		} else {
@@ -146,12 +159,9 @@ func processSubviewsToPrint(superview, view *View, subviews []*View) {
 			makeTopAndBottom(renderedView.Top, renderedView.Leading, renderedView.Width, renderedView.Height+1)
 		}
 	}
-	if len(subviews) == 0 {
-		fmt.Println("leaf3", view.Text)
-	}
 	for _, subview := range subviews {
 		copyOfSubview := subview
-		processSubviewsToPrint(view, copyOfSubview, subview.Subviews)
+		processSubviewsToPrint(copyOfSubview, subview.Subviews)
 	}
 }
 
