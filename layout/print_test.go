@@ -14,5 +14,13 @@ func TestPrint(t *testing.T) {
 	rv.Height = height
 
 	addRenderedViewToBoard(&rv)
+
+	rv.Top = 2
+	rv.Leading = 2
+	rv.Width = 6
+	rv.Height = 6
+
+	addRenderedViewToBoard(&rv)
+
 	showBoard(height, width)
 }
