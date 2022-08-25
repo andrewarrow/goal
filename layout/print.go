@@ -2,11 +2,11 @@ package layout
 
 import "fmt"
 
-func makeTopAndBottom(row, leading, width, height int) {
-	board[row][leading] = "+"
-	board[row][leading+width] = "+"
+func makeTopAndBottom(top, leading, width, height int) {
+	board[top][leading] = "+"
+	board[top][leading+width] = "+"
 	for j := leading + 1; j < leading+width; j++ {
-		board[row][j] = "-"
+		board[top][j] = "-"
 		board[height][j] = "-"
 	}
 	board[height][leading] = "+"
@@ -24,6 +24,11 @@ func makeText(top, leading int, text string) {
 	for i := 0; i < len(text); i++ {
 		board[top][leading+i] = string(text[i])
 	}
+}
+
+func addRenderedViewToBoard(rv *RenderedView) {
+	makeSides(rv.Top+1, rv.Leading, rv.Width-1, rv.Height)
+	makeTopAndBottom(rv.Top, rv.Leading, rv.Width-1, rv.Height-1)
 }
 
 func showBoard(rows, cols int) {

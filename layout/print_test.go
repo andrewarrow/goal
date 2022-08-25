@@ -3,10 +3,16 @@ package layout
 import "testing"
 
 func TestPrint(t *testing.T) {
-	height := 30
-	width := 60
+	height := 10
+	width := 20
 	setupBoard(height, width)
-	makeTopAndBottom(0, 0, width-1, height-1)
-	makeSides(1, 0, width-1, height-1)
+
+	rv := RenderedView{}
+	rv.Top = 0
+	rv.Leading = 0
+	rv.Width = width
+	rv.Height = height
+
+	addRenderedViewToBoard(&rv)
 	showBoard(height, width)
 }
