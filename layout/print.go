@@ -28,6 +28,7 @@ func makeText(top, leading int, text string) {
 
 func showBoard(rows, cols int) {
 	for i := 0; i < rows; i++ {
+		fmt.Printf("%02d ", i)
 		for j := 0; j < cols; j++ {
 			fmt.Printf(stringCharAt(i, j))
 		}
