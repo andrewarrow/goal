@@ -140,7 +140,7 @@ func computeWidth(view, referencedView *View) int {
 
 func computeHeight(view, referencedView *View) int {
 	if view.Bottom.Constant < 0 {
-		return referencedView.renderedView.Height - 4 + referencedView.renderedView.Top
+		return referencedView.renderedView.Height - 4
 	}
 	return referencedView.renderedView.Height
 }
@@ -151,8 +151,7 @@ func processSubviewsToPrint(view *View, subviews []*View) {
 		if view.Class == "UILabel" {
 			makeText(renderedView.Top, renderedView.Leading, view.Text)
 		} else {
-			makeSides(renderedView.Top, renderedView.Leading, renderedView.Width-1, renderedView.Height+1)
-			makeTopAndBottom(renderedView.Top, renderedView.Leading, renderedView.Width-1, renderedView.Height+1)
+			addRenderedViewToBoard(renderedView)
 		}
 	}
 	for _, subview := range subviews {
