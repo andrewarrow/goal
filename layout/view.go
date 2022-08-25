@@ -30,7 +30,7 @@ type Constraint struct {
 
 var root Layout
 var idMap = map[string]*View{}
-var charStringMaps = map[int]map[int]string{}
+var board = map[int]map[int]string{}
 
 func LoadFromFile(filename string) {
 	asString := files.ReadFile(filename)
@@ -38,19 +38,8 @@ func LoadFromFile(filename string) {
 }
 
 func Print(cols, rows int) {
-	rootRenderedView := RenderedView{}
-	rootRenderedView.Width = cols
-	rootRenderedView.Height = rows
-	rootRenderedView.setComplete()
-	root.Root.renderedView = &rootRenderedView
+	rootRenderedView := setupRootAndBoard(rows, cols)
 	processSubviewsForIdMap(&root.Root, root.Root.Subviews)
-
-	for i := 0; i < rows; i++ {
-		charStringMaps[i] = map[int]string{}
-		for j := 0; j < cols; j++ {
-			charStringMaps[i][j] = " "
-		}
-	}
 
 	makeTopAndBottom(0, 0, rootRenderedView.Width-1, rootRenderedView.Height-1)
 	makeSides(1, 0, rootRenderedView.Width-1, rootRenderedView.Height-1)
@@ -84,7 +73,7 @@ func allViewsReady() bool {
 }
 
 func stringCharAt(row, col int) string {
-	return charStringMaps[row][col]
+	return board[row][col]
 }
 
 func processSubviewsForIdMap(view *View, subviews []*View) {
