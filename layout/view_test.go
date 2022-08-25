@@ -48,4 +48,24 @@ func TestLayoutRenders(t *testing.T) {
 	if !view1Width || !view1Height {
 		t.Errorf("view1 Width or Height wrong")
 	}
+
+	view2Top := idMap["view2"].renderedView.Top == 4
+	view2Leading := idMap["view2"].renderedView.Leading == 6
+	if !view2Top || !view2Leading {
+		t.Errorf("view2 Top or Leading wrong")
+	}
+
+	// we process again - in non-test code notice the loop
+	fmt.Println("---")
+	processSubviewsToRender(&root.Root, root.Root.Subviews)
+	for _, viewName := range views {
+		view := idMap[viewName]
+		fmt.Println(viewName, view.renderedView.String())
+	}
+
+	view2Width := idMap["view2"].renderedView.Width == 11
+	view2Height := idMap["view2"].renderedView.Height == 22
+	if !view2Width || !view2Height {
+		t.Errorf("view2 Width or Height wrong")
+	}
 }

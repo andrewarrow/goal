@@ -124,11 +124,8 @@ func processSubviewsToRender(view *View, subviews []*View) {
 			view.renderedView.WidthSet = true
 			view.renderedView.HeightSet = true
 		} else {
-			// root.leading to root.trailing == root.width
-			// view1.leading to label1.trailing == label1.width
-			// label1.leading + 99 to label2.trailing == label2.width
 			if referencedViewTrailing.renderedView.WidthSet {
-				view.renderedView.Width = referencedViewTrailing.renderedView.Width - 6
+				view.renderedView.Width = computeWidth(view, referencedViewTrailing)
 				view.renderedView.WidthSet = true
 			}
 
@@ -142,6 +139,13 @@ func processSubviewsToRender(view *View, subviews []*View) {
 		copyOfSubview := subview
 		processSubviewsToRender(copyOfSubview, subview.Subviews)
 	}
+}
+
+func computeWidth(view, referencedView *View) int {
+	if view.Trailing.Constant < 0 {
+		return referencedView.renderedView.Width - 6
+	}
+	return referencedView.renderedView.Width + 6
 }
 
 func processSubviewsToPrint(view *View, subviews []*View) {
