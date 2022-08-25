@@ -1,5 +1,7 @@
 package layout
 
+import "fmt"
+
 type RenderedView struct {
 	Top        int
 	Leading    int
@@ -20,4 +22,8 @@ func (rv *RenderedView) setComplete() {
 	rv.LeadingSet = true
 	rv.WidthSet = true
 	rv.HeightSet = true
+}
+
+func (rv *RenderedView) String() string {
+	return fmt.Sprintf("%d,%d|%d,%d", rv.Top, rv.Leading, rv.Width, rv.Height)
 }
