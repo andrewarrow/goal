@@ -1,5 +1,7 @@
 package layout
 
+import "fmt"
+
 func makeTopAndBottom(row, leading, width, height int) {
 	board[row][leading] = "+"
 	board[row][leading+width] = "+"
@@ -22,4 +24,16 @@ func makeText(top, leading int, text string) {
 	for i := 0; i < len(text); i++ {
 		board[top][leading+i] = string(text[i])
 	}
+}
+
+func showBoard(rows, cols int) {
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			fmt.Printf(stringCharAt(i, j))
+		}
+		if i < rows-1 {
+			fmt.Printf("\n")
+		}
+	}
+	fmt.Println("")
 }

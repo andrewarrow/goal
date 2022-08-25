@@ -2,7 +2,6 @@ package layout
 
 import (
 	"encoding/json"
-	"fmt"
 	"goal/files"
 	"strings"
 )
@@ -51,16 +50,7 @@ func Print(cols, rows int) {
 		}
 	}
 	processSubviewsToPrint(&root.Root, root.Root.Subviews)
-
-	for i := 0; i < rows; i++ {
-		for j := 0; j < cols; j++ {
-			fmt.Printf(stringCharAt(i, j))
-		}
-		if i < rows-1 {
-			fmt.Printf("\n")
-		}
-	}
-	fmt.Println("")
+	showBoard(rows, cols)
 }
 
 func allViewsReady() bool {
