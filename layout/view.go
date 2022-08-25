@@ -130,7 +130,7 @@ func processSubviewsToRender(view *View, subviews []*View) {
 			}
 
 			if referencedViewBottom.renderedView.HeightSet {
-				view.renderedView.Height = referencedViewBottom.renderedView.Height - 4
+				view.renderedView.Height = computeHeight(view, referencedViewBottom)
 				view.renderedView.HeightSet = true
 			}
 		}
@@ -146,6 +146,13 @@ func computeWidth(view, referencedView *View) int {
 		return referencedView.renderedView.Width - 6
 	}
 	return referencedView.renderedView.Width + 6
+}
+
+func computeHeight(view, referencedView *View) int {
+	if view.Bottom.Constant < 0 {
+		return referencedView.renderedView.Height - 4 + referencedView.renderedView.Top
+	}
+	return referencedView.renderedView.Height
 }
 
 func processSubviewsToPrint(view *View, subviews []*View) {
