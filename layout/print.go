@@ -32,9 +32,9 @@ func addRenderedViewToBoard(rv *RenderedView) {
 }
 
 func showBoard(rows, cols int) {
-	fmt.Println("   01234567890")
+	//fmt.Println("   01234567890")
 	for i := 0; i < rows; i++ {
-		fmt.Printf("%02d ", i)
+		//fmt.Printf("%02d ", i)
 		for j := 0; j < cols; j++ {
 			fmt.Printf(stringCharAt(i, j))
 		}
