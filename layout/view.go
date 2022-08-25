@@ -111,13 +111,11 @@ func processSubviewsToRender(view *View, subviews []*View) {
 		if referencedViewTop.renderedView.TopSet {
 			view.renderedView.Top = referencedViewTop.renderedView.Top + 2
 			view.renderedView.TopSet = true
-			//fmt.Println("|", view.Id, "topSet", view.renderedView.Top)
 		}
 
 		if referencedViewLeading.renderedView.LeadingSet {
 			view.renderedView.Leading = referencedViewLeading.renderedView.Leading + (view.Leading.Constant / 10)
 			view.renderedView.LeadingSet = true
-			//fmt.Println("|", view.Id, "leadingSet", view.renderedView.Leading)
 		}
 
 		if view.Class == "UILabel" {
@@ -130,14 +128,12 @@ func processSubviewsToRender(view *View, subviews []*View) {
 			// view1.leading to label1.trailing == label1.width
 			// label1.leading + 99 to label2.trailing == label2.width
 			if referencedViewTrailing.renderedView.WidthSet {
-				//fmt.Println("w", view.Id, referencedViewTrailing.Id, referencedViewTrailing.renderedView.Width)
-				view.renderedView.Width = 24 //referencedViewTrailing.renderedView.Width - 4
+				view.renderedView.Width = referencedViewTrailing.renderedView.Width - 6
 				view.renderedView.WidthSet = true
 			}
 
 			if referencedViewBottom.renderedView.HeightSet {
-				//fmt.Println("h", view.Id, referencedViewBottom.Id, referencedViewBottom.renderedView.Height)
-				view.renderedView.Height = 24 //referencedViewBottom.renderedView.Height - 4
+				view.renderedView.Height = referencedViewBottom.renderedView.Height - 4
 				view.renderedView.HeightSet = true
 			}
 		}
@@ -154,8 +150,8 @@ func processSubviewsToPrint(view *View, subviews []*View) {
 		if view.Class == "UILabel" {
 			makeText(renderedView.Top, renderedView.Leading, view.Text)
 		} else {
-			makeSides(renderedView.Top, renderedView.Leading, renderedView.Width, renderedView.Height+1)
-			makeTopAndBottom(renderedView.Top, renderedView.Leading, renderedView.Width, renderedView.Height+1)
+			makeSides(renderedView.Top, renderedView.Leading, renderedView.Width-1, renderedView.Height+1)
+			makeTopAndBottom(renderedView.Top, renderedView.Leading, renderedView.Width-1, renderedView.Height+1)
 		}
 	}
 	for _, subview := range subviews {
